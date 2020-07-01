@@ -10,7 +10,7 @@ edition = "2018"
 [dependencies]
 native-tls = "0.2.4"
 yaml-rust = "0.4"
-rodio = "0.11.0"
+#rodio = "0.11.0"
 dirs = "3.0.0"
 
 # Linux might need
