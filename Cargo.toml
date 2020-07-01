@@ -13,7 +13,7 @@ yaml-rust = "0.4"
 rodio = "0.11.0"
 dirs = "3.0.0"
 
-# Linux
+# Linux might need
 #hound = "3.4.0"
 #alsa-sys = "0.1.2"
 #openssl-sys = "0.9.58"

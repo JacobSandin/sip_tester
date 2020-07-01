@@ -39,8 +39,8 @@ fn load_file(file: &str) {
                                      config["port"].as_i64().unwrap_or(8881),
                                      config["username"].as_str().unwrap_or("test"),
                                      config["password"].as_str().unwrap_or("gurka")) {
-                    println!("SOOOUUND!");
-                    make_sound();
+                    println!("=========== ERROR! ============");
+                    handle_error();
                 }
             }
         }
@@ -101,13 +101,15 @@ fn try_login_to_sip(server: &str, port: i64,username: &str, password: &str) -> b
     false
 }
 
-fn make_sound() {
-    let device = rodio::default_output_device().unwrap();
-    let sink = Sink::new(&device);
-    let source = rodio::source::SineWave::new(700);
-    let dur = Duration::from_millis(100);
-    sink.append(source.take_duration(dur));
-    thread::sleep(dur);
+// TODO: 
+fn handle_error() {
+    //Does not work on linux, or VMS not sure wich yet.
+    // let device = rodio::default_output_device().unwrap();
+    // let sink = Sink::new(&device);
+    // let source = rodio::source::SineWave::new(700);
+    // let dur = Duration::from_millis(100);
+    // sink.append(source.take_duration(dur));
+    // thread::sleep(dur);
 }
 
 fn main() {
