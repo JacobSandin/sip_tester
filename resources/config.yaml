@@ -1,0 +1,20 @@
+sipservers:
+  192.168.96.1:
+    8888:
+      port: 8888
+      username: "test"
+      password: "test"
+    8881:
+      port: 8881
+      username: "test"
+      password: "test"
+  192.168.96.2:
+    6002:
+      port: 6002
+      username: "test"
+      password: "test"
+    6003:
+      port: 6003
+      username: "test"
+      password: "test"
+
