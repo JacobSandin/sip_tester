@@ -194,14 +194,6 @@ fn main() {
         println!("Using config: {}",&format!("{}{}",&home_dir, "/sip_tester.config.yaml"));
         load_file(&format!("{}{}",&home_dir, "/sip_tester.config.yaml"));
         return
-    } else if Path::new("D:/utv/rust/sip_tester/resources/config.yaml").exists() {
-        println!("Using config: {}","D:/utv/rust/sip_tester/resources/config.yaml");
-        load_file("D:/utv/rust/sip_tester/resources/config.yaml");
-        return
-    }else if Path::new("/home/ubuntu/JacobTestar/rust/sip_tester/resources/config.yaml").exists() {
-        println!("Using config: {}","/home/ubuntu/JacobTestar/rust/sip_tester/resources/config.yaml");
-        load_file("/home/ubuntu/JacobTestar/rust/sip_tester/resources/config.yaml");
-        return
     }
 
     println!("No config file found, searched (./config.yaml) (/etc/sip_tester.yaml) and (/etc/sip_tester/config.yaml) ({})",&format!("{}{}",&home_dir, "/etc/sip_test.config.yaml"));
