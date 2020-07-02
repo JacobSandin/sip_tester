@@ -10,7 +10,7 @@ use yaml_rust::{YamlLoader};
 // use rodio::{Sink, Source};
 use std::{thread, time};
 use url::{Url};
-use yaml_rust::parser::Event::StreamEnd;
+
 
 
 fn load_file(file: &str) {
