@@ -9,8 +9,8 @@ use std::path::Path;
 use yaml_rust::{YamlLoader};
 // use rodio::{Sink, Source};
 use std::{thread, time};
-// use std::time::Duration;
-
+use url::{Url};
+use yaml_rust::parser::Event::StreamEnd;
 
 
 fn load_file(file: &str) {
@@ -25,7 +25,12 @@ fn load_file(file: &str) {
 
     let servers = yamldoc["sipservers"].as_hash().unwrap();
 
-    //println!("{:?}\r\n\r\n", servers);
+
+    let alerts = &yamldoc["alerts"]["slack"]["url"].as_str().unwrap_or("");
+    // println!("Alert: {}",&alerts);
+    //  handle_error("WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWHAT"
+    //               ,&alerts);
+
     loop {
         for (server,server_values) in servers.iter() {
             for (_port, config) in server_values.as_hash().unwrap().iter() {
@@ -40,7 +45,10 @@ fn load_file(file: &str) {
                                      config["username"].as_str().unwrap_or("test"),
                                      config["password"].as_str().unwrap_or("gurka")) {
                     println!("=========== ERROR! ============");
-                    handle_error();
+
+                    //TODO send config
+                    handle_error(&format!("Falied to login: {}:{}", server.as_str().unwrap_or("127.0.0.1"),config["port"].as_i64().unwrap_or(8881))
+                                 ,&alerts);
                 }
             }
         }
@@ -101,24 +109,75 @@ fn try_login_to_sip(server: &str, port: i64,username: &str, password: &str) -> b
     false
 }
 
+fn alert_slack(full_url: &str) {
+
+    let url = match Url::parse(full_url) {
+        Ok(url) => url,
+        Err(error) => {
+            println!("Slack url parse error: {}", error);
+            return ()
+        },
+    };
+    let server = url.host_str().unwrap_or("localhost");
+    let port = url.port_or_known_default().unwrap_or(80);
+    let query = format!("{}?{}",url.path(),url.query().unwrap_or(""));
+
+    println!("url: {} {} {}",server, port, query );
+
+
+    let builder = TlsConnector::builder().danger_accept_invalid_certs(true).build().unwrap();
+    let stream = match TcpStream::connect(format!("{}:{}",server,port)){
+        Ok(stream) => stream,
+        Err(error) => {
+            println!("Error: {:?}",error);
+            return
+        },
+    };
+    let mut stream = match builder.connect(server, stream) {
+        Ok(stream) => stream,
+        Err(error) => {
+            println!("Error: {:?}", error);
+            return
+        },
+    };
+
+    match stream.write_all(format!("GET {} HTTP/1.2\r\nHost: {}\r\n\r\n",query,server).as_bytes()) {
+        Err(error) => {
+            println!("Error: {:?}", error);
+            return
+        },
+        _ => (),
+    }
+
+    let mut res = String::new();
+
+    //TODO error handling
+
+    let mut buff = BufReader::new(stream);
+    match buff.read_line(&mut res) {
+        Err(error) => {
+            println!("Error: {:?}", error);
+            return
+        },
+        _ => {
+            println!("-- {:?} --", res.trim_end());
+            return
+        },
+    };
+
+}
+
+
 // TODO: 
-fn handle_error() {
-    //Does not work on linux, or VMS not sure wich yet.
-    // let device = rodio::default_output_device().unwrap();
-    // let sink = Sink::new(&device);
-    // let source = rodio::source::SineWave::new(700);
-    // let dur = Duration::from_millis(100);
-    // sink.append(source.take_duration(dur));
-    // thread::sleep(dur);
+fn handle_error(message: &str, slackurl: &str) {
+    let slack_url = str::replace(&slackurl,"{}",&message);
+    alert_slack(&slack_url);
 }
 
 fn main() {
 
     let home_dir = String::from(dirs::home_dir().unwrap().to_str().unwrap());
 
-    //let home_dir = std::env::var("HOME").unwrap_or(" ".parse().unwrap());
-
-    //println!("Öhhconfig: {:?} exists:{}",&home_dir,Path::new(&home_dir).exists());
     if Path::new("./config.yaml").exists() {
         println!("Using config: {}","./config.yaml");
         load_file("config.yaml");
