@@ -44,4 +44,6 @@ Then its just "cargo run" I will try to add executables for ubuntu 20.04 and win
 
 Best of luck, and please drop a line in issues or so if you got any sugestions, etc.
 
+I am responcible for our server environment on [imCode Partner AB](https://www.imcode.com), and we are always hapy to help and meet new customers.
+
 /Jacob Sandin
