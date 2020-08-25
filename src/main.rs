@@ -52,7 +52,7 @@ fn load_file(file: &str) {
                 }
             }
         }
-        let sleep_for = time::Duration::from_millis(10000);
+        let sleep_for = time::Duration::from_millis(60000);
         thread::sleep(sleep_for);
         //return
     }
