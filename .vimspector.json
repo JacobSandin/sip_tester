@@ -1,0 +1,20 @@
+{
+  "configurations": {
+    "launch": {
+      "adapter": "CodeLLDB",
+      "configuration": {
+          "type":"lldb",
+          "request": "launch",
+          "args":["*${args}"],
+          "sourceLanguages": ["rust"],
+          "program": "${workspaceRoot}/target/debug/sip_tester"
+      },
+      "breakpoints":{
+          "exception": {
+              "cpp-throw":"Y",
+              "cpp-catch":"N"
+          }
+      }
+    }
+  }
+}
